@@ -1,0 +1,23 @@
+#title: A-Scan from circular ballast - 0 moist - 0 degraded 
+#domain 1.6 1 0.002
+#dx_dy_dz: 0.002 0.002 0.002
+#time_window: 3e-9
+
+#material: 6 0 1 0 ballast
+
+#waveform: ricker 1 1.0e9 my_ricker
+#hertzian_dipole: z 0.73 0.85 0 my_ricker
+#rx: 0.77 0.85 0
+
+#python:
+from gprMax.input_cmd_funcs import *
+
+data_file = open("lukas/RSA/Circles/cirList.txt",'r')
+for line in data_file[0]:
+    cir = line.split()
+    print(float(cir[0]), float(cir[1]), 0 , float(cir[0]), float(cir[1]), 0, float(cir[2]), 'ballast')
+    cylinder(float(cir[0]), float(cir[1]), 0 , float(cir[0]), float(cir[1]), 0, float(cir[2]), 'ballast')
+
+#end_python:
+
+#geometry_view: 0 0 0 2 1.6 0.002 0.002 0.002 0.002 circular_ballast_test n
