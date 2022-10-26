@@ -81,13 +81,13 @@ def rsa_circle_minmax(r_min,r_max,req_void,h,w,tol,timeout):
     if elapsed_time >= timeout:
         print("------------------------------------------------")
         print("timed out after ",elapsed_time," seconds")
-        print("Current void: ",cur_void)
+        print("Current void: ",round(cur_void,4))
         print("Increase timeout or req_void to find a solution")
         print("------------------------------------------------")
     else:
         print("------------------------------------------------")
         print("Found a solution in ",elapsed_time," seconds")
-        print("Current void: ",cur_void)
+        print("Current void: ",round(cur_void,4))
         print("------------------------------------------------")
     return cirList, cur_void
 
@@ -123,12 +123,12 @@ def rsa_circle_graded(grad_curve, req_void,h,w,tol,timeout):
     if elapsed_time >= timeout:
         print("------------------------------------------------")
         print("timed out after ",elapsed_time," seconds")
-        print("Current void: ",cur_void)
+        print("Current void: ",round(cur_void,4))
         print("Increase timeout or req_void to find a solution")
         print("------------------------------------------------")
     else:
         print("------------------------------------------------")
         print("Found a solution in ",elapsed_time," seconds")
-        print("Current void: ",cur_void)
+        print("Current void: ",round(cur_void,4))
         print("------------------------------------------------")
     return cirList, cur_void

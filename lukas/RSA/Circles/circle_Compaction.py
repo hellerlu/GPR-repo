@@ -72,7 +72,7 @@ def calc_void(cirList):
     for cir in cirList:
         temp_void = temp_void - math.pi*cir[2]**2/(z_max*x_max)
 
-    return temp_void
+    return round(temp_void,4)
 
 
 def discretization_domain(cirList,h,w,smallest_d,v,horizontal):
