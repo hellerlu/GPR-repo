@@ -3,12 +3,13 @@ import imageio
 import matplotlib.pyplot as plt
 import math
 import shutil
+import os
 
 
 def plot(cirList,h,w):
     #Plots all circles within h x w box
 
-    plt.figure()
+    plt.figure(figsize=(2*h,2*w))
     for cir in cirList:
         circle1 = plt.Circle((cir[0],cir[1]),cir[2], facecolor='tab:brown',edgecolor='k')
         plt.gcf().gca().add_artist(circle1)
@@ -16,6 +17,7 @@ def plot(cirList,h,w):
     plt.ylim(0, h)
     plt.gca().set_aspect('equal','box')
     plt.show()
+    print("hello")
 
 
 def plot_save(cirList,index,filenames,direc,w,h):
@@ -29,7 +31,8 @@ def plot_save(cirList,index,filenames,direc,w,h):
     plt.xlim(0, w)
     plt.ylim(0, h)
     plt.gca().set_aspect('equal','box')
-    filename = f'images/circle_{index}_{direc}.png'
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, f'images/circle_{index}_{direc}.png')
     filenames.append(filename)
     plt.savefig(filename,dpi=96)
     plt.close()
@@ -45,7 +48,6 @@ def create_gif(filenames,horizontal):
     else:
         direc = "Vertical"
     # File path
-    import os
     dirname = os.path.dirname(__file__)
     gif_path = os.path.join(dirname, f'gif/Compaction_Algorithm_{direc}.gif')
       
@@ -58,7 +60,8 @@ def create_gif(filenames,horizontal):
 
 def delete_img_dir():
     # It delets the content from the images folder
-    shutil.rmtree('images', ignore_errors=True)
+    dirname = os.path.dirname(__file__)
+    shutil.rmtree(os.path.join(dirname,'images'), ignore_errors=True)
 
 
 def calc_void(cirList):
