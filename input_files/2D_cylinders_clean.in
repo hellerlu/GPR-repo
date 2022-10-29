@@ -19,7 +19,7 @@
 #box: 0 0 0 6 0.1 0.003 asphalt 
 #box: 0 0.1 0 6 0.3 0.003 pss 
 
-#python:
+#python: 
 from gprMax.input_cmd_funcs import *
 
 data_file = open("input_files/cirList_1.txt",'r')

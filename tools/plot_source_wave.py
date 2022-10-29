@@ -111,7 +111,7 @@ def mpl_plot(w, timewindow, dt, iterations, fft=False):
             pltrange = np.where(freqs > 4 * w.freq)[0][0]
         pltrange = np.s_[0:pltrange]
 
-        fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, num=w.type, figsize=(14, 7), facecolor='w', edgecolor='w')
+        fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, num=w.type, figsize=(10, 5), facecolor='w', edgecolor='w')
 
         # Plot waveform
         ax1.plot(time, waveform, 'r', lw=2)
@@ -151,7 +151,7 @@ def plot_wave_api(
     dt,
     fft=False,
   ):
-    """If installed as a module this is the entry point for plotting Source waves"""
+    """If installed as a module this is the entry point for plotting source waves"""
 
     class ImportArguments:
         pass

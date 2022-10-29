@@ -8,8 +8,8 @@ import os
 
 def plot(cirList,h,w):
     #Plots all circles within h x w box
-
-    plt.figure(figsize=(2*h,2*w))
+    
+    plt.figure(dpi=100)
     for cir in cirList:
         circle1 = plt.Circle((cir[0],cir[1]),cir[2], facecolor='tab:brown',edgecolor='k')
         plt.gcf().gca().add_artist(circle1)
@@ -17,10 +17,10 @@ def plot(cirList,h,w):
     plt.ylim(0, h)
     plt.gca().set_aspect('equal','box')
     plt.show()
-    print("hello")
+    
 
 
-def plot_save(cirList,index,filenames,direc,w,h):
+def plot_save(cirList,index,filenames,direc,h,w):
     # Creates a plot of circles with information in cirList within h x w box
     # It appends the filename in filenames
     
@@ -120,7 +120,7 @@ def discretization_domain(cirList,h,w,smallest_d,v,horizontal):
     return discret_domains, cirList_np, num_domains
 
 
-def compaction(domain_list,cirList,num_domains,horizontal,save_gif,w,h):
+def compaction(domain_list,cirList,num_domains,horizontal,save_gif,h,w):
     #Compaction algorithm that takes a discretized domain of circles
     #It compacts along its second axis
 
@@ -162,7 +162,7 @@ def compaction(domain_list,cirList,num_domains,horizontal,save_gif,w,h):
                 comp_cir_domain_cur[idx][1] = cir1[2]
             else:
                 #Find maximum y coordinate (minimum travel distance) to all circles below that are within proximity
-                comp_cir_domain_cur[idx,1] = np.amax(np.sqrt((cir1[2]+proximity_cir_below[:,2])**2 - (cir1[0]-proximity_cir_below[:,0])**2) + proximity_cir_below[:,1])
+                comp_cir_domain_cur[idx,1] = max([np.amax(np.sqrt((cir1[2]+proximity_cir_below[:,2])**2 - (cir1[0]-proximity_cir_below[:,0])**2) + proximity_cir_below[:,1]),cir1[2]])
             
         #pass compressed domain into saved state
         domain_list[i,0:num_cir_cur,:] = comp_cir_domain_cur
