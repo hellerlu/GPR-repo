@@ -4,7 +4,6 @@ import shutil
 def move_output(overwrite,title,geom_filename,n_steps):
     # Creating a folder for the files
     try:
-        print(os.path.join(os.getcwd(),f'output_files/{title}'))
         os.mkdir(os.path.join(os.getcwd(),f'output_files/{title}'))
     except FileExistsError:
         if overwrite:

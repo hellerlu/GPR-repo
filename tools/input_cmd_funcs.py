@@ -15,6 +15,15 @@ for line in data_file:
 '''
     return g
 
+def antenna_cmd_block(x,y,z,spatial_res,steps):
+    g = f'''
+#python:
+from user_libs.antennas.GSSI import antenna_like_GSSI_1500
+antenna_like_GSSI_1500({x}+{steps}*current_model_run, {y}, {z}, resolution={spatial_res})
+#end_python:
+    '''
+    return g
+
 def command(cmd, *parameters):
     """
     ATTENTION: manipulated so it jumps to the next line automatically

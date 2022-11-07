@@ -38,8 +38,8 @@ class sleepers():
 
     # predefined sleepers with ['material', width [m], height[m]]
     wood =      ['dry_wood',0.15,   0.26]   # SBB Buchenschwelle RP IV K
-    steel_1 =   ['pec',     0.15,   0.01]   # Österreichische Staatsbahnen, Platte oben
-    steel_2 =   ['pec',     0.1,    0.055]  # Österreichische Staatsbahnen, Platten schräg seitlich
+    steel_1 =   ['pec',     0.220,  0.01]   # Österreichische Staatsbahnen, Platte oben approx
+    steel_2 =   ['pec',     0.008,  0.1]    # Österreichische Staatsbahnen, Platten schräg seitlich approx
     concrete =  ['concrete',0.17,   0.1]
 
     def n_sleepers(self):
@@ -66,7 +66,7 @@ class sleepers():
             f += self.write(self.steel_1)
             for i in range(self.n_sleepers()):
                 f += command('box',round(self.dist_dom_sleeper+i*self.dist_sleepers- self.steel_2[1],3),round(self.top_height - self.steel_2[2],3),0,round(self.dist_dom_sleeper+i*self.dist_sleepers,3),self.top_height,self.domain_size[2],self.steel_2[0])
-                f += command('box',round(self.dist_dom_sleeper+i*self.dist_sleepers+ self.steel_1[1] + self.steel_2[1],3),round(self.top_height - self.steel_2[2],3),0,round(self.dist_dom_sleeper+i*self.dist_sleepers + self.steel_1[1],3),self.top_height,self.domain_size[2],self.steel_2[0])
+                f += command('box',round(self.dist_dom_sleeper+i*self.dist_sleepers+ self.steel_1[1],3),round(self.top_height - self.steel_2[2],3),0,round(self.dist_dom_sleeper+i*self.dist_sleepers+ self.steel_1[1] + self.steel_2[1],3),self.top_height,self.domain_size[2],self.steel_2[0])
             return f 
         elif self.material == "concrete":
             return self.write(self.concrete)

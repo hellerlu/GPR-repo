@@ -5,7 +5,7 @@ import numpy as np
 def create_inputfile():
     print('----------------------------------------------------------------')
     # Title of B-Scan: 
-    title = '3D_cylinders_clean'
+    title = '3D_cylinders_clean_antenna'
 
     # Geometry file required? If run as a B-Scan DO NOT include it as it creates a file in each step
     geom_req = True
@@ -16,42 +16,46 @@ def create_inputfile():
     # Domain size:
     domain_size = [1.5, 1, 1.6]
 
-    # Waveform according to http://docs.gprmax.com/en/latest/input.html:
-    waveform_chosen = 'ricker'
+    # Antenna or ricker hertzian dipole:
+    antenna = True
 
-    #Scaling of the maximum amplitude of the waveform
-    amp = 1
+    if not antenna:
+        # Waveform according to http://docs.gprmax.com/en/latest/input.html:
+        waveform_chosen = 'ricker'
 
-    # Center frequency of the waveform in [Hz]:
-    freq = 1.0e9
+        #Scaling of the maximum amplitude of the waveform
+        amp = 1
 
-    # Source type
-    source_type = 'hertzian_dipole'
+        # Center frequency of the waveform in [Hz]:
+        freq = 1.0e9
 
+        # Source type
+        source_type = 'hertzian_dipole'
+
+        # x-Distance between source and reciever
+        dist_src_rx = 0.04
+
+        #timewindow for plot, depends on wavefrom. Ricker usually 4e-9 s
+        iter_timewindow = 4e-9 #[s]
+
+        #iteration step, according to http://docs.gprmax.com/en/latest/plotting.html 1.926e-12 works fine:
+        iteration_step = 1.926e-12
+
+        #Plots information on chosen waveform
+        plot_wave_api(waveform_chosen, amp, freq, iter_timewindow, iteration_step, fft=True)
+    
     # Start position of source
-    src_start = [0.2, 0.9, domain_size[2]/2]
-
-    # x-Distance between source and reciever
-    dist_src_rx = 0.04
+    src_start = [0.2, 0.9, domain_size[2]/2]  # y=0.9 for 0.4m above ballast
 
     # Source and reciever step per iteration
     # NOTE: NEEDS TO BE A MULTIPLE OF SPATIAL RESOLUTION
-    steps = 0.021
+    steps = 0.02
 
     # Calculated number of A-Scans for B-Scan:
-    n_steps = int(np.floor((domain_size[0] - 2*src_start[0] - dist_src_rx) / steps))
+    n_steps = int(np.floor((domain_size[0] - 2*src_start[0]) / steps))
     print("Number of steps required to run through the whole domain: ", n_steps)
     print('----------------------------------------------------------------')
     print('')
-
-    #timewindow for plot, depends on wavefrom. Ricker usually 4e-9 s
-    iter_timewindow = 4e-9 #[s]
-
-    #iteration step, according to http://docs.gprmax.com/en/latest/plotting.html 1.926e-12 works fine:
-    iteration_step = 1.926e-12
-
-    #Plots information on chosen waveform
-    plot_wave_api(waveform_chosen, amp, freq, iter_timewindow, iteration_step, fft=True)
 
     #speed of light in vacuum
     c = 2.9979245e8 
@@ -83,7 +87,7 @@ def create_inputfile():
     print('----------------------------------------------------------------')
 
     # Spatial resolution chosen:
-    spatial_res = [0.003, 0.003, 0.003]
+    spatial_res = [0.002, 0.002, 0.002]
 
     # Time window chosen:
     time_window_chosen = 15e-9
@@ -115,7 +119,7 @@ def create_inputfile():
     dist_dom_sleeper = 0.3
 
     # Distance of top ballast to top sleeper:
-    dist_lookout = 0.03
+    dist_lookout = 0.03 # if steel is chosen: MAX 0.01
 
     top_height_sleepers = round(asphalt_height+pss_height+ballast_height+dist_lookout,3)
     
@@ -139,11 +143,17 @@ def create_inputfile():
     f.write(command('domain',domain_size[0],domain_size[1],domain_size[2]))
     f.write(command('dx_dy_dz',spatial_res[0],spatial_res[1],spatial_res[2]))
     f.write(command('time_window',time_window_chosen))
-    f.write(command('waveform',waveform_chosen,amp,freq,f'my_{waveform_chosen}'))
-    f.write(command(source_type,'z',src_start[0],src_start[1],src_start[2],f'my_{waveform_chosen}'))
-    f.write(command('rx',round(src_start[0]+dist_src_rx,2),src_start[1],src_start[2]))
-    f.write(command('src_steps',steps,0,0))
-    f.write(command('rx_steps',steps,0,0))
+    if not antenna:
+        f.write('## Source:\n')
+        f.write(command('waveform',waveform_chosen,amp,freq,f'my_{waveform_chosen}'))
+        f.write(command(source_type,'z',src_start[0],src_start[1],src_start[2],f'my_{waveform_chosen}'))
+        f.write(command('rx',round(src_start[0]+dist_src_rx,2),src_start[1],src_start[2]))
+        f.write(command('src_steps',steps,0,0))
+        f.write(command('rx_steps',steps,0,0))
+    else:
+        f.write('## Antenna:\n')
+        f.write(antenna_cmd_block(src_start[0],src_start[1],src_start[2],spatial_res[0],steps))
+    
     f.write('\n')
     
     if geom_req:
