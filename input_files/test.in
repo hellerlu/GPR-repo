@@ -1,0 +1,43 @@
+## General comands
+#title: 3D_cylinders_clean 
+#domain: 1.5 1 0.8 
+#dx_dy_dz: 0.003 0.003 0.003 
+#time_window: 1.5e-08 
+#waveform: ricker 1 1000000000.0 my_ricker 
+#hertzian_dipole: z 0.2 0.9 0.8 my_ricker 
+#rx: 0.24 0.9 0.8 
+#src_steps: 0.021 0 0 
+#rx_steps: 0.021 0 0 
+
+#geometry_view: 0 0 0 1.5 1 0.8 0.003 0.003 0.003 test_geom n 
+
+## Materials:
+#soil_peplinski: 0.9 0.1 2 2.66 0.001 0.005 pss
+#material: 8 0.01 1 0 asphalt 
+#material: 6 0 1 0 ballast 
+#material: 8 0.01 1 0 concrete 
+#material: 7 0 1 0 dry_sand 
+#material: 2 0.01 1 0 dry_wood 
+ 
+
+## Subgrade:
+#fractal_box: 0 0.1 0 1.5 0.3 0.8 1.5 1 1 1 5 pss my_pss
+#add_surface_roughness: 0 0.3 0 1.5 0.3 0.8 1.5 1 1 0.285 0.315 my_pss
+#fractal_box: 0 0 0 1.5 0.1 0.8 1.5 1 1 1 1 asphalt my_asphalt
+#add_surface_roughness: 0 0.1 0 1.5 0.1 0.8 1.5 1 1 0.085 0.115 my_asphalt
+
+
+## Ballast:
+
+#python: 
+from gprMax.input_cmd_funcs import *
+
+data_file = open("input_files/cirList_1.txt",'r')
+for line in data_file:
+    cir = line.split()
+    cylinder(float(cir[0]), float(cir[1]), 0 , float(cir[0]), float(cir[1]), 1.6, float(cir[2]), 'ballast')
+
+#end_python:
+#box: 0 0.5 0 1.5 1 0.8 free_space 
+
+
