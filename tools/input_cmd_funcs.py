@@ -1,12 +1,9 @@
-from tools.plot_source_wave import *
-
-
 def cylinder_cmd_block(domain_size_y):
     g = f'''
 #python: 
 from gprMax.input_cmd_funcs import *
 
-data_file = open("input_files/cirList_1.txt",'r')
+data_file = open("files/cirList_1.txt",'r')
 for line in data_file:
     cir = line.split()
     cylinder(float(cir[0]), float(cir[1]), 0 , float(cir[0]), float(cir[1]), {domain_size_y}, float(cir[2]), 'ballast')
@@ -18,8 +15,8 @@ for line in data_file:
 def antenna_cmd_block(x,y,z,spatial_res,steps):
     g = f'''
 #python:
-from user_libs.antennas.GSSI import antenna_like_GSSI_1500
-antenna_like_GSSI_1500({x}+{steps}*current_model_run, {y}, {z}, resolution={spatial_res})
+from tools.GSSI import antenna_like_GSSI_400
+antenna_like_GSSI_400({x}+{steps}*current_model_run, {y}, {z}, resolution={spatial_res})
 #end_python:
     '''
     return g

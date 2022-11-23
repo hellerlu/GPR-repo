@@ -4,27 +4,35 @@ import numpy as np
 class materials():
 
     # predefined materials with ['name', rel permittivity, conductivity, rel permeability, magnetic loss]
-    ballast =   ['ballast',  6,  0,    1, 0]
-    dry_sand =  ['dry_sand', 7,  0,    1, 0]
-    # wet_sand =  ['wet_sand', 15, 0,    1, 0]
-    # wet_clay =  ['wet_clay', 25, 0.01, 1, 0]
-    concrete =  ['concrete', 8,  0.01, 1, 0]
-    dry_wood =  ['dry_wood', 2,  0.01, 1, 0]
-    pss =       ['pss',      7,  0,    1, 0]
-    apshalt =   ['asphalt',  8,  0.01, 1, 0]
+    ballast =       ['ballast',  6.5,  0,    1, 0]
+    ballast_mix =   ['ballast_mix', 3.77 , 0, 1, 0]         # USE dielectric_mixing.ipynb
+    dry_sand =      ['dry_sand', 5,  0,    1, 0]
+    # wet_sand =    ['wet_sand', 15, 0,    1, 0]
+    # wet_clay =    ['wet_clay', 25, 0.01, 1, 0]
+    concrete =      ['concrete', 8,  0.01, 1, 0]
+    dry_wood =      ['dry_wood', 2,  0.01, 1, 0]
+    asphalt =       ['asphalt',  8,  0.01, 1, 0]
+    gravel =        ['gravel',   5,  0,    1, 0]
 
-    def get_matList(self):
-        members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__") ]
-        mat_list = []
-        for mem in members:
-            mat_list.append(getattr(self, mem))
-        return mat_list
+    # Soil peplinski with ['name', sand fraction, clay fraction, bulk density g/cm3, density g/cm3 of sand, lower volumetry water fraction, upper vol water fraction]
+    pss =       ['pss',  0.9, 0.1, 2, 2.66, 0.001, 0.005]
+
+    mat_list = [[ballast,ballast_mix,dry_sand,concrete,dry_wood, asphalt,gravel],[pss]]
+
+    # def get_matList(self):
+    #     members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__") ]
+    #     mat_list = []
+    #     for mem in members:
+    #         mat_list.append(getattr(self, mem))
+    #     return mat_list
 
     def write_materials(self):
-        mat_list = self.get_matList()
+        # mat_list = self.get_matList()
         f = ""
-        for m in mat_list:
+        for m in self.mat_list[0]:
             f += command('material',m[1],m[2],m[3],m[4],m[0])
+        for m in self.mat_list[1]:
+            f += command('soil_peplinski',m[1],m[2],m[3],m[4],m[5],m[6],m[0])
         return f
             
 class sleepers():
