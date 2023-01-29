@@ -6,6 +6,10 @@
 # Please use the attribution at http://dx.doi.org/10.1190/1.3548506
 
 
+## Slightly changed for Master thesis, Lukas Heller
+## Especially waveform and center frequency have been changed.
+
+
 from gprMax.exceptions import CmdInputError
 from gprMax.input_cmd_funcs import *
 

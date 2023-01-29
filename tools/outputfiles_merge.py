@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with gprMax.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+## API built to interact with it as a module rather than terminal command (Master thesis, Lukas Heller)
+
 import argparse
 import glob
 import os
@@ -118,6 +122,7 @@ def merge_files(basefilename, removefiles=False):
 def merge_files_api(
     basefilename, removefiles=False
 ):
+    # Entry point of programm if accessed as module (Lukas Heller)
 
     class ImportArguments:
         pass
@@ -129,6 +134,7 @@ def merge_files_api(
     merge_files(args.basefilename, removefiles=args.remove_files)
 
 if __name__ == "__main__":
+    # Entry point of programm if accessed from terminal (Lukas Heller)
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Merges traces (A-scans) from multiple output files into one new file, then optionally removes the series of output files.', usage='cd gprMax; python -m tools.outputfiles_merge basefilename')

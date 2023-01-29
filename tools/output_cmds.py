@@ -2,6 +2,14 @@ import os
 import shutil
 
 def move_output(overwrite,title,geom_filename,n_steps):
+    """ Moves .out files into output folder
+
+    Input
+        overwrite:      True if existing file should be overwritten
+        title:          outputfile title
+        geom_filename:  filename of geometry file
+        n_steps:        number of files
+    """
     # Creating a folder for the files
     try:
         os.mkdir(os.path.join(os.getcwd(),f'output_files/{title}'))

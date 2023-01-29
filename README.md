@@ -7,3 +7,4 @@ It consists of several algorithms such as:
 - Finite Difference-Time-Domain Method (FDTD) using gprMax module
 
 Most of the running applications are run on the Euler cluster. 
+-> include how-to.md here as well

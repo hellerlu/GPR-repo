@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with gprMax.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+## API built to interact with it as a module rather than terminal command (Master thesis, Lukas Heller)
+
 import argparse
 import os
 
@@ -77,7 +81,8 @@ def mpl_plot(filename, outputdata, dt, rxnumber, rxcomponent):
 def plot_bscan_api(
     outputfile, rx_component
 ):
-
+    # Entry point of programm if accessed as module (Lukas Heller)
+    
     class ImportArguments:
         pass
 
@@ -102,6 +107,8 @@ def plot_bscan_api(
 
 
 if __name__ == "__main__":
+    # Entry point of programm if accessed from terminal (Lukas Heller)
+
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Plots a B-scan image.', 

@@ -1,4 +1,13 @@
 def cylinder_cmd_block(domain_size_y):
+    """ Prints the python block for circular ballast approximation
+
+    Input:
+        domain_size_y:  Domain size in the y-direction (2D=spatial resolution)
+    Output:
+        g:              String containing python block
+
+    """
+    # Dynamic python block 
     g = f'''
 #python: 
 from gprMax.input_cmd_funcs import *
@@ -13,6 +22,19 @@ for line in data_file:
     return g
 
 def antenna_cmd_block(x,y,z,spatial_res,steps):
+    """ Prints the python block for antenna implementation
+
+    Input:
+        x:      x coordinate of antenna within domain
+        y:      y coordinate of antenna within domain
+        z:      z coordinate of antenna within domain
+        spatial_res:    spatial resoluation of simulation
+        steps:  step in x-direction each iteration
+    Output:
+        g:      String containing python block
+
+    """
+    # Dynamic python block 
     g = f'''
 #python:
 from tools.GSSI import antenna_like_GSSI_400
@@ -23,7 +45,7 @@ antenna_like_GSSI_400({x}+{steps}*current_model_run, {y}, {z}, resolution={spati
 
 def command(cmd, *parameters):
     """
-    ATTENTION: manipulated so it jumps to the next line automatically
+    ATTENTION: manipulated so it jumps to the next line automatically (master thesis)
     Helper function. Prints the gprMax #<cmd>: <parameters>. None is ignored
     in the output.
 

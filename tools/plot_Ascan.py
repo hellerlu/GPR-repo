@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with gprMax.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+## API built to interact with it as a module rather than terminal command (Master thesis, Lukas Heller)
+
 import argparse
 import os
 import sys
@@ -226,7 +230,8 @@ def mpl_plot(filename, outputs=Rx.defaultoutputs, fft=False):
 def plot_ascan_api(
     outputfile, rx_component, plot_fft=False
 ):
-
+    # Entry point of programm if accessed as module (Lukas Heller)
+    
     class ImportArguments:
         pass
 
@@ -240,6 +245,7 @@ def plot_ascan_api(
 
 
 if __name__ == "__main__":
+    # Entry point of programm if accessed from terminal (Lukas Heller)
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Plots electric and magnetic fields and currents from all receiver points in the given output file. Each receiver point is plotted in a new figure window.', usage='cd gprMax; python -m tools.plot_Ascan outputfile')

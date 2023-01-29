@@ -16,6 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with gprMax.  If not, see <http://www.gnu.org/licenses/>.
 
+
+
+
+## API built to interact with it as a module rather than terminal command (Master thesis, Lukas Heller)
+
+
+
 import argparse
 import os
 import sys

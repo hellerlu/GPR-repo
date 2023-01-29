@@ -2,6 +2,15 @@ import numpy as np
 from tools.plot_source_wave import *
 
 def get_spatial_and_time_wind(waveform_chosen, amp, freq):
+    """ Calculates the spatial resolution and the time window required for the simulation
+
+    Input:
+        waveform_chosen:    waveform available in gprMax
+        amp:                amplitude of waveform
+        freq:               center frequency
+    Output:
+        Terminal information about resolution and time window
+    """
     #timewindow for plot, depends on wavefrom. Ricker usually 4e-9 s
     iter_timewindow = 4e-9 #[s]
 

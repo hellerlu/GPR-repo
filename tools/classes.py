@@ -19,6 +19,7 @@ class materials():
 
     mat_list = [[ballast,ballast_mix,dry_sand,concrete,dry_wood, asphalt,gravel],[pss]]
 
+    ## For getting the material list automatically:
     # def get_matList(self):
     #     members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__") ]
     #     mat_list = []
@@ -51,6 +52,14 @@ class sleepers():
     concrete =  ['concrete',0.17,   0.1]
 
     def n_sleepers(self):
+        """ Calculates number of sleepers in domain
+    
+        Input:
+            self
+        Output:
+            n_sl:   Number of sleepers in domain
+        """
+        # Cases
         if self.material == "wood":
             n_sl = int(np.floor((self.domain_size[0]-self.wood[1]-self.dist_dom_sleeper) / self.dist_sleepers )) + 1
         elif self.material == "steel":
@@ -61,15 +70,33 @@ class sleepers():
         return n_sl
 
     def write(self, mat):
+        """ Writes sleeper command in an string array
+    
+        Input:
+            self
+        Output:
+            f:   string containing all sleeper box commands
+        """
+        # Initialise    
         f = ""
+        # Loop through number of sleepers
         for i in range(self.n_sleepers()):
             f += command('box',round(self.dist_dom_sleeper+i*self.dist_sleepers,3),round(self.top_height - mat[2],3),0,round(self.dist_dom_sleeper+i*self.dist_sleepers+mat[1],3),self.top_height,self.domain_size[2],mat[0])
         return f
 
     def write_sleepers(self):
+        """ Writes sleeper commands depending on material to .in-file
+    
+        Input:
+            self
+        Output:
+            f:    String containing all sleeper box commands depending on material
+        """
+        # Cases
         if self.material == "wood":
             return self.write(self.wood)
         elif self.material == "steel":
+            # Steel is composed of three boxes
             f = ""
             f += self.write(self.steel_1)
             for i in range(self.n_sleepers()):
@@ -93,6 +120,14 @@ class rails():
     rail_dist = 1.435 # Normalspur
 
     def write_rails(self):
+        """ Writes rail command into string array
+    
+        Input:
+            self
+        Output:
+            f:    String containing all rail box commands
+        """
+
         f = ""
         f += command('box',0,self.start_height,round((self.domain_size[2]-self.rail_dist-self.steel_3[1])/2,3),self.domain_size[0],round(self.start_height+self.steel_3[2],3),round((self.domain_size[2]-self.rail_dist+self.steel_3[1])/2,3),self.steel_3[0])
         f += command('box',0,round(self.start_height+self.steel_3[2],3),round((self.domain_size[2]-self.rail_dist-self.steel_2[1])/2,3),self.domain_size[0],round(self.start_height+self.steel_3[2]+self.steel_2[2],3),round((self.domain_size[2]-self.rail_dist+self.steel_2[1])/2,3),self.steel_2[0])

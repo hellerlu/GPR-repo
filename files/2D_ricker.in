@@ -1,0 +1,27 @@
+## General comands
+#title: 2D_ricker
+#domain: 1.5 1.73 0.002 
+#dx_dy_dz: 0.002 0.002 0.002 
+#time_window: 2.5e-08 
+#messages: n
+
+## Source:
+#waveform: ricker 1 1000000000.0 my_ricker 
+#hertzian_dipole: z 0.2 1.53 0.001 my_ricker 
+#rx: 0.35 1.53 0.001 
+#src_steps: 0.02 0 0 
+#rx_steps: 0.02 0 0 
+
+##geometry_view: 0 0 0 1.5 1.73 0.002 0.002 0.002 0.002 2D_boxes_clean_geom n 
+
+## Materials:
+#material: 6.5 0 1 0 ballast 
+#material: 3.77 0 1 0 ballast_mix 
+#material: 5 0 1 0 dry_sand 
+#material: 8 0.01 1 0 concrete 
+#material: 2 0.01 1 0 dry_wood 
+#material: 8 0.01 1 0 asphalt 
+#material: 5 0 1 0 gravel 
+#soil_peplinski: 0.9 0.1 2 2.66 0.001 0.005 pss 
+
+
