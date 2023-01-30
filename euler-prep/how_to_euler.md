@@ -21,7 +21,9 @@
         - Run: `python setup.py install`
     
 ## Batch file layout
-The batch file (shell script .sh) that you need to run a hybrid job according to [Euler documentation](https://scicomp.ethz.ch/wiki/Parallel_computing) looks like: 
+
+### gprMax with terminal command
+This section describes if gprMax is used by accessing it via terminal. The batch file (shell script .sh) that you need to run a hybrid job according to [Euler documentation](https://scicomp.ethz.ch/wiki/Parallel_computing) looks like: 
 
 > #!/bin/bash
 >
@@ -46,6 +48,7 @@ Let's say you want to run a program on N cores with M MPI ranks and T OpenMP thr
 1. The number of cores on the node (24 in Euler) is divisible by your chosen T, the number of threads per MPI rank, and
 2. You match threads and MPI ranks to the sockets of the node (there are two sockets per node in Euler).
 
+### GprMax via API
 You can also use the API of gprMax, rather than terminal commands and create a runner python file, for example `main_gprMax_run.py`:
 
 > filename = "2D_boxes_clean"
@@ -73,7 +76,7 @@ To run this, modify the batch file accordingly:
 > export OMP_NUM_THREADS=6  
 > srun --cpu-bind=cores python main_gprMax_run.py
 
-## Directory structure according to my runner files
-Always stay within the directory where you've placed all your gprMax files/folders This is your main working directory. In order to run my runner files, please put a folder `files` in the same directory. Within this `files` folder, put a subfolder called `output_files`. In this folder all outputs will be stored according to its definition in the .in file of the models.  
+## Directory structure according to thesis runner files
+Always stay within the directory where you've placed all your gprMax files/folders This is your main working directory. In order to run the thesis runner files, please put a folder `files` in the same directory. Within this `files` folder, put a subfolder called `output_files`. In this folder all outputs will be stored according to its definition in the .in file of the models.  
 Put all your models (.in) within the `files` folder. 
 

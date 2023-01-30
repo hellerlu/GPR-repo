@@ -1,12 +1,15 @@
 #!/bin/bash
-#SBATCH --ntasks=96
 #SBATCH --time=04:00:00
-#SBATCH --mem-per-cpu=2048
-#SBATCH --job-name=gprmax
+#SBATCH --ntasks=12
+#SBATCH --cpus-per-task=12
+#SBATCH --ntasks-per-socket=2
+#SBATCH --mem-per-cpu=1024
+#SBATCH --nodes=6
+#SBATCH --job-name=gprmax1
 #SBATCH --output=output_1.txt
-#SBATCH --tmp=2000
 
 module load openmpi/4.1.4
 
-export OMP_NUM_THREADS=6
-mpirun -n 16 --map-by ppr:6:node scapython main_gprMax_run.py
+export OMP_NUM_THREADS=12
+srun --cpu-bind=cores python -m gprMax files/2D_boxes_clean_box_07ghz_wat.in -n 55 --mpi-no-spawn --geometry-fixed
+

@@ -28,8 +28,8 @@ def create_inputfile():
     # Time window chosen:
     time_window_chosen = 25e-9
 
-    # Antenna or ricker hertzian dipole:
-    antenna = True
+    # Antenna (true) or ricker hertzian dipole  (false):
+    antenna = False
     
     # Height of source above sleeper:
     height_src_sleeper = 0.7 
@@ -43,23 +43,38 @@ def create_inputfile():
     asphalt_height = 0.15
     pss_height = 0.25
     ballast_height = 0.25
+    fouling_height = 0
+
+    # Add roughness?
+    rough = True
 
     # Ballast LOD: ['Box','Cylinder']
     ballast_type = 'Cylinder'
 
+    # SLEEPER
+    # Inlude sleepers?
+    sleep = True
     # Sleeper type: ['concrete','steel','wood']
     sleeper_type = 'concrete'
     # Distance between sleepers (mid-mid)
     dist_sleepers = 0.7 #[m]
-
     # Distance between domain edge and first sleeper:
     dist_dom_sleeper = 0.3
-
     # Distance of top ballast to top sleeper:
     dist_lookout = 0.03 # if steel is chosen: MAX 0.01
 
     # Include rails?
     include_rails = False
+
+    # DIELECTRIC PROPERTIES: (Add more if needed -> adjust material instance & class)
+    # Ballast stones dielectric constant:
+    er_ballast = 6.5
+    # Ballast/Air mix dielectric constant:
+    er_ballast_mix = 3.77 # use dielectric_mixing.ipynb
+    # Peplinski PSS layer?
+    peplinski = True
+    # Water content in PSS layer: (only applicaple if Peplinksi soil model is chosen)
+    water_content = 5 # %
 
     # END USER INPUT
     #################################################################################################
@@ -126,7 +141,11 @@ def create_inputfile():
 
     
     # Create instances
-    mat = materials()
+    mat = materials(er_ballast = er_ballast,
+                    er_ballast_mix = er_ballast_mix, # USE dielectric_mixing.ipynb
+                    er_dry_sand = 5,
+                    pss_peplinski = [0.9, 0.1, round(water_content/100,3), round(water_content/100,3)+0.001] # [sand fraction, clay fraction, lower water fraction, upper water fraction]
+                    )
     sl = sleepers(sleeper_type,dist_dom_sleeper,dist_sleepers,top_height_sleepers,domain_size)
     rail = rails(top_height_sleepers,domain_size)
 
@@ -142,7 +161,7 @@ def create_inputfile():
     except:
         pass
 
-    # Create new input file
+    ####### Create new input file #######
     f = open(f'input_files/{title}.in','w+')
     f.write('## General comands\n')
     f.write(command('title',title))
@@ -172,20 +191,33 @@ def create_inputfile():
     f.write('## Materials:\n')
     f.write(mat.write_materials())
     f.write('\n')
+    if fouling_height != 0:
+        f.write('## Fouling:\n')
+        if ballast_type == 'Box':
+            f.write(command('box',0,round(gravel_height+asphalt_height+pss_height,2),0,domain_size[0],round(gravel_height+asphalt_height+pss_height+fouling_height,2),domain_size[2],mat.fouling_mix[0]))
+        elif ballast_type == 'Cylinder':
+            f.write(command('box',0,round(gravel_height+asphalt_height+pss_height,2),0,domain_size[0],round(gravel_height+asphalt_height+pss_height+fouling_height,2),domain_size[2],mat.fouling[0]))
+        f.write('\n')
+
     f.write('## Ballast:\n')
     if ballast_type == 'Box':
-        f.write(command('box',0,round(gravel_height+asphalt_height+pss_height,2),0,domain_size[0],round(gravel_height+asphalt_height+pss_height+ballast_height,2),domain_size[2],mat.ballast_mix[0]))
+        f.write(command('box',0,round(gravel_height+asphalt_height+pss_height+fouling_height,2),0,domain_size[0],round(gravel_height+asphalt_height+pss_height+ballast_height,2),domain_size[2],mat.ballast_mix[0]))
     elif ballast_type == 'Cylinder':
         f.write(cylinder_cmd_block(domain_size[2]))
         f.write(command('box',0,round(gravel_height+asphalt_height+pss_height+ballast_height,2),0,domain_size[0],domain_size[1],domain_size[2],'free_space'))
     f.write('\n')
+
     f.write('## Subgrade:\n')
-    f.write(command('fractal_box',0,round(gravel_height+asphalt_height,3),0,domain_size[0],round(gravel_height+asphalt_height+pss_height,2),domain_size[2],1.5,1,1,1,5,mat.pss[0],f'my_{mat.pss[0]}'))
-    f.write(command('add_surface_roughness',0,round(gravel_height+asphalt_height+pss_height,3),0,domain_size[0],round(gravel_height+asphalt_height+pss_height,3),domain_size[2],1.5,1,1,round(gravel_height+asphalt_height+pss_height,2)-0.01,round(gravel_height+asphalt_height+pss_height,2)+0.01,f'my_{mat.pss[0]}'))
+    if peplinski:
+        f.write(command('fractal_box',0,round(gravel_height+asphalt_height,3),0,domain_size[0],round(gravel_height+asphalt_height+pss_height,2),domain_size[2],1.5,1,1,1,5,mat.pss[0],f'my_{mat.pss[0]}'))
+    else:
+        f.write(command('fractal_box',0,round(gravel_height+asphalt_height,3),0,domain_size[0],round(gravel_height+asphalt_height+pss_height,2),domain_size[2],1.5,1,1,1,1,mat.dry_sand[0],f'my_{mat.pss[0]}'))
     f.write(command('fractal_box',0,gravel_height,0,domain_size[0],round(gravel_height+asphalt_height,3),domain_size[2],1.5,1,1,1,1,mat.asphalt[0],f'my_{mat.asphalt[0]}'))
-    f.write(command('add_surface_roughness',0,round(gravel_height+asphalt_height,3),0,domain_size[0],round(gravel_height+asphalt_height,3),domain_size[2],1.5,1,1,round(gravel_height+asphalt_height,3)-0.004,round(gravel_height+asphalt_height,3)+0.004,f'my_{mat.asphalt[0]}'))
     f.write(command('fractal_box',0,0,0,domain_size[0],round(gravel_height,3),domain_size[2],1.5,1,1,1,1,mat.gravel[0],f'my_{mat.gravel[0]}'))
-    f.write(command('add_surface_roughness',0,round(gravel_height,3),0,domain_size[0],round(gravel_height,3),domain_size[2],1.5,1,1,round(gravel_height,3)-0.004,round(gravel_height,3)+0.004,f'my_{mat.gravel[0]}'))
+    if rough:
+        f.write(command('add_surface_roughness',0,round(gravel_height+asphalt_height+pss_height,3),0,domain_size[0],round(gravel_height+asphalt_height+pss_height,3),domain_size[2],1.5,1,1,round(gravel_height+asphalt_height+pss_height,2)-0.01,round(gravel_height+asphalt_height+pss_height,2)+0.01,f'my_{mat.pss[0]}'))
+        f.write(command('add_surface_roughness',0,round(gravel_height+asphalt_height,3),0,domain_size[0],round(gravel_height+asphalt_height,3),domain_size[2],1.5,1,1,round(gravel_height+asphalt_height,3)-0.004,round(gravel_height+asphalt_height,3)+0.004,f'my_{mat.asphalt[0]}'))
+        f.write(command('add_surface_roughness',0,round(gravel_height,3),0,domain_size[0],round(gravel_height,3),domain_size[2],1.5,1,1,round(gravel_height,3)-0.004,round(gravel_height,3)+0.004,f'my_{mat.gravel[0]}'))
 
     f.write('\n')
     f.write('## Sleepers:\n')

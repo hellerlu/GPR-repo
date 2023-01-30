@@ -3,23 +3,32 @@ import numpy as np
 
 class materials():
 
-    # predefined materials with ['name', rel permittivity, conductivity, rel permeability, magnetic loss]
-    ballast =       ['ballast',  6.5,  0,    1, 0]
-    ballast_mix =   ['ballast_mix', 3.77 , 0, 1, 0]         # USE dielectric_mixing.ipynb
-    dry_sand =      ['dry_sand', 5,  0,    1, 0]
-    # wet_sand =    ['wet_sand', 15, 0,    1, 0]
-    # wet_clay =    ['wet_clay', 25, 0.01, 1, 0]
-    concrete =      ['concrete', 8,  0.01, 1, 0]
-    dry_wood =      ['dry_wood', 2,  0.01, 1, 0]
-    asphalt =       ['asphalt',  8,  0.01, 1, 0]
-    gravel =        ['gravel',   5,  0,    1, 0]
+    def __init__(self, 
+                 er_ballast = 6.5,
+                 er_ballast_mix = 3.77, # USE dielectric_mixing.ipynb
+                 er_dry_sand = 5,
+                 pss_peplinski = [0.9, 0.1, 0.001, 0.002] # [sand fraction, clay fraction, lower water fraction, upper water fraction]
+                 ):
+        # Materials, add more in __init__ if more parameters should be varied
+        self.ballast =       ['ballast',  er_ballast,  0,    1, 0]
+        self.ballast_mix =   ['ballast_mix', er_ballast_mix , 0, 1, 0] 
+        self.dry_sand =      ['dry_sand', er_dry_sand,  0,    1, 0]
+        # Soil peplinski with ['name', sand fraction, clay fraction, bulk density g/cm3, density g/cm3 of sand, lower volumetry water fraction, upper vol water fraction]
+        self.pss =           ['pss',  pss_peplinski[0], pss_peplinski[1], 2, 2.66, pss_peplinski[2], pss_peplinski[3]]
 
-    # Soil peplinski with ['name', sand fraction, clay fraction, bulk density g/cm3, density g/cm3 of sand, lower volumetry water fraction, upper vol water fraction]
-    pss =       ['pss',  0.9, 0.1, 2, 2.66, 0.001, 0.005]
 
-    mat_list = [[ballast,ballast_mix,dry_sand,concrete,dry_wood, asphalt,gravel],[pss]]
+        # predefined materials with ['name', rel permittivity, conductivity, rel permeability, magnetic loss]
+        # wet_sand =    ['wet_sand', 15, 0,    1, 0]
+        # wet_clay =    ['wet_clay', 25, 0.01, 1, 0]
+        self.concrete =      ['concrete', 8,  0.01, 1, 0]
+        self.dry_wood =      ['dry_wood', 2,  0.01, 1, 0]
+        self.asphalt =       ['asphalt',  8,  0.01, 1, 0]
+        self.gravel =        ['gravel',   5,  0,    1, 0]
+        self.fouling =       ['fouling',  5,  0,    1, 0]    
+        self.fouling_mix =   ['fouling_mix',6.1, 0.01, 1, 0]
 
-    ## For getting the material list automatically:
+    
+    ## Getting the material list automatically:
     # def get_matList(self):
     #     members = [attr for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__") ]
     #     mat_list = []
@@ -28,11 +37,15 @@ class materials():
     #     return mat_list
 
     def write_materials(self):
+        # If function get_matList is active:
         # mat_list = self.get_matList()
+
+        mat_list = [[self.ballast,self.ballast_mix,self.dry_sand,self.concrete,self.dry_wood,self.asphalt,self.gravel,self.fouling, self.fouling_mix],[self.pss]]
+
         f = ""
-        for m in self.mat_list[0]:
+        for m in mat_list[0]:
             f += command('material',m[1],m[2],m[3],m[4],m[0])
-        for m in self.mat_list[1]:
+        for m in mat_list[1]:
             f += command('soil_peplinski',m[1],m[2],m[3],m[4],m[5],m[6],m[0])
         return f
             

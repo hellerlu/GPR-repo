@@ -1,0 +1,19 @@
+# This file may be used to create a conda environment using:
+# $ conda create --name gprRepo --file <this file>
+
+name: gprRepo
+dependencies:
+- python=3.7.12
+- colorama
+- cython
+- h5py
+- jupyter
+- matplotlib
+- numpy
+- pip
+- psutil
+- scipy
+- pandas
+
+- pip:
+  - readgssi

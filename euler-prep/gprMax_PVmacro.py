@@ -1,51 +1,15 @@
-# Script for running Paraview in Client-Server Mode
+# Macro that needs to be imported in Paraview to run it locally
 
 import json
 import mmap
 import os
 from xml.etree import ElementTree as ET
-import time
 
 from paraview.simple import *
-
-##############################
-# USER INPUT
-#----------------------------#
-
-
-
-filepath_server = "./GPR_repo/input_files/3D_boxes_clean_geom.vti"
-filepath_loc = "./GPR_repo/3D_boxes_clean_geom.vti"
-
-screenshot_name = "3D_boxes_clean"
-
-##############################
-
-
-
-
-##############################
-# Connection to server (euler)
-##############################
-
-# Setting up a reverse connection from euler
-start_time = time.time()
-ReverseConnect(port="34556")
-end_time = time.time()
-
-print(f"Connection run time: {round(end_time-start_time,1)}s")
-
-
-##############################
-# Main run file
-##############################
-
-# Start time measurement
-start_time = time.time()
+import vtk
 
 # Read Paraview version number to set threshold filter method
 pvv = GetParaViewVersion()
-print(f"{pvv}")
 if pvv.major == 5 and pvv.minor < 10:
     new_thres = False
 else:
@@ -178,8 +142,6 @@ def display_pmls(pmlthick, dx_dy_dz, nx_ny_nz):
         pml_view = Show(pml_gp)
         pml_view.Opacity = 0.5
 
-reader = OpenDataFile(filepath_server)
-
 # Get whatever source is loaded (should be model)
 model = GetActiveSource()
 
@@ -229,8 +191,7 @@ material_ID_max = 0
 #################################################################
 
 for file in files:
-
-    with open(filepath_loc) as f:
+    with open("./3D_cylinders_clean_geom.vti") as f:
         #######################
         # Read data from file #
         #######################
@@ -364,26 +325,13 @@ pMLboundaryregion = FindSource('PML boundary region')
 
 # hide data in view
 Hide(pMLboundaryregion, renderview)
-camera = GetActiveCamera()
 
-camera.Elevation(20)
 RenderAllViews()
 
 # Reset view to fit data
 renderview.ResetCamera()
-SaveScreenshot(f"{screenshot_name}_1.png",renderview,ImageResolution=(1500,1500))
 
-
-
-camera.Yaw(45)
-camera.Elevation(20)
-RenderAllViews()
-renderview.ResetCamera()
-SaveScreenshot(f"{screenshot_name}_2.png",renderview,ImageResolution=(1500,1500))
-
-end_time = time.time()
-
-print(f"Script run time: {round(end_time-start_time,1)}s")
+# SaveScreenshot("3D_cylinders_clean_test.png",renderview)
 
 # SaveState("3D_cylinders_clean_test.pvsm")
 
